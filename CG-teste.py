@@ -13,6 +13,7 @@ pygame.display.set_caption("Pygame")
 
 PRETO = (0, 0, 0)
 BRANCO = (255, 255, 255)
+COR = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 VERMELHO = (255, 0, 0)
 AZUL = (0, 0, 255)
 VERDE = (0, 255, 0)
@@ -62,17 +63,11 @@ while True:
     texto_rect.y += velocidade_y   
 
     if texto_rect.right >= largura:
-        velocidade_x = random.randint(-1, 1)
+        velocidade_x = random.randint(-1, 0)
         velocidade_y = random.randint(-1, 1)
 
         velo_x = velocidade_x
         velo_y = velocidade_y
-
-        while velocidade_x == 0 or velo_x == velocidade_x:
-            velocidade_x = random.randint(-1, 1)
-
-        while velocidade_y == 0 or velo_y == velocidade_y:
-            velocidade_y = random.randint(-1, 1)
 
         red = random.randint(0, 255)
         green = random.randint(0, 255)
@@ -82,17 +77,11 @@ while True:
         texto = fonte.render("Roni", True, COR)
 
     if texto_rect.left <= 0: 
-        velocidade_x = random.randint(-1, 1)
+        velocidade_x = random.randint( 0, 1)
         velocidade_y = random.randint(-1, 1)
 
         velo_x = velocidade_x
         velo_y = velocidade_y
-
-        while velocidade_x == 0 or velo_x == velocidade_x:
-            velocidade_x = random.randint(-1, 1)
-
-        while velocidade_y == 0 or velo_y == velocidade_y:
-            velocidade_y = random.randint(-1, 1)
 
         red = random.randint(0, 255)
         green = random.randint(0, 255)
@@ -103,16 +92,10 @@ while True:
 
     if texto_rect.bottom >= altura:
         velocidade_x = random.randint(-1, 1)
-        velocidade_y = random.randint(-1, 1)
+        velocidade_y = random.randint(-1, 0)
 
         velo_x = velocidade_x
         velo_y = velocidade_y
-
-        while velocidade_x == 0 or velo_x == velocidade_x:
-            velocidade_x = random.randint(-1, 1)
-
-        while velocidade_y == 0 or velo_y == velocidade_y:
-            velocidade_y = random.randint(-1, 1)
 
         red = random.randint(0, 255)
         green = random.randint(0, 255)
@@ -123,16 +106,10 @@ while True:
     
     if texto_rect.top <= 0:
         velocidade_x = random.randint(-1, 1)
-        velocidade_y = random.randint(-1, 1)
+        velocidade_y = random.randint( 0, 1)
 
         velo_x = velocidade_x
         velo_y = velocidade_y
-
-        while velocidade_x == 0 or velo_x == velocidade_x:
-            velocidade_x = random.randint(-1, 1)
-
-        while velocidade_y == 0 or velo_y == velocidade_y:
-            velocidade_y = random.randint(-1, 1)
 
         red = random.randint(0, 255)
         green = random.randint(0, 255)
@@ -146,16 +123,3 @@ while True:
     tela.fill(PRETO)
     tela.blit(texto, texto_rect)
     pygame.display.flip()
-
-    
-
-
-
-
-
-
-
-
-
-
-
