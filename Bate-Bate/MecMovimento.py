@@ -1,7 +1,7 @@
 import pygame
 import random
 
-class MovendoTexto:
+class MovendoTexto: # Classe MovendoTexto encapsula outras funções para que o texto mude de cor e se mova 
     def __init__(self, texto, fonte_tamanho, largura, altura):
         self.fonte = pygame.font.SysFont(None, fonte_tamanho)
         self.text = texto
@@ -12,18 +12,18 @@ class MovendoTexto:
 
         self.velocidade_x = self.gerar_numero_nao_zero()
         self.velocidade_y = self.gerar_numero_nao_zero()
-    def gerar_numero_nao_zero(self):
+    def gerar_numero_nao_zero(self): # Define o comportamento dos objetos
         numero = 0
         while numero == 0:
                 numero = random.randint(-1, 1)
         return numero
     
-    def move(self):
+    def move(self): # Define o comportamento dos objetos
          self.rect.x += self.velocidade_x
          self.rect.y += self.velocidade_y
 
-         if self.rect.left <= 0:
-             self.velocidade_x = random.randint(0, 1)
+         if self.rect.left <= 0: # Define o comportamento dos objetos
+             self.velocidade_x = random.randint(0, 1) 
              self.velocidade_y = random.randint(-1, 1)
              self.change_color()
 
@@ -42,7 +42,7 @@ class MovendoTexto:
              self.velocidade_y = random.randint(-1, 0)
              self.change_color()
 
-    def change_color(self):
+    def change_color(self): # Define o comportamento dos objetos
         cor_texto = (
             random.randint(0, 255),
             random.randint(0, 255),
