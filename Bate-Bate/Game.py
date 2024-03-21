@@ -23,7 +23,7 @@ class Game: # Controla a logica do jogo
             self.tela.fill((0, 0, 0))
             self.tela.blit(self.MovendoTexto.texto_surf, self.MovendoTexto.rect)
             pygame.display.flip()
-            self.clock.tick(60)
+            self.clock.tick(60) #fps (velocidade)
 
         pygame.quit()
         sys.exit()

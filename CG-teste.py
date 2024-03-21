@@ -62,7 +62,7 @@ while True:
     texto_rect.x += velocidade_x      
     texto_rect.y += velocidade_y   
 
-    if texto_rect.right >= largura:
+    if texto_rect.right >= largura: #canto-superior-esquerdo
         velocidade_x = random.randint(-1, 0)
         velocidade_y = random.randint(-1, 1)
 
@@ -104,7 +104,7 @@ while True:
         COR = (red, green, blue)
         texto = fonte.render("Roni", True, COR)
     
-    if texto_rect.top <= 0:
+    if texto_rect.top <= 0:   #canto-superior-esquerdo
         velocidade_x = random.randint(-1, 1)
         velocidade_y = random.randint( 0, 1)
 
@@ -119,7 +119,7 @@ while True:
         texto = fonte.render("Roni", True, COR)
 
 
-    clock.tick(200)
+    clock.tick(200) #fps (velocidade)
     tela.fill(PRETO)
     tela.blit(texto, texto_rect)
     pygame.display.flip()
