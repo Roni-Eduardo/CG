@@ -66,6 +66,7 @@ def menu_principal():
         screen.blit(texto_menu, text_menu_rect)
 
         tempo = pygame.time.get_ticks()
+        print(tempo)
 
         if tempo % 2000 < 1000:
             texto_iniciar = font.render("Pressione ESPACO", True, BRANCO)
