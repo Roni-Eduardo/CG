@@ -1,6 +1,7 @@
 import pygame
 from pygame import mixer
 import sys
+import random
 
 pygame.init()
 
@@ -14,15 +15,15 @@ screen = pygame.display.set_mode((largura, altura))
 pygame.display.set_caption("Pong")
 
 # Definição da Raquete
-wide_racket = 10 #raquete_largura
-racket_height = 60 #raquete_altura
-ball_size = 10 #tamanho_bola
+wide_racket = 10  # raquete_largura
+racket_height = 60  # raquete_altura
+ball_size = 14  # tamanho_bola
 
 # Velocidade da raquete
 raquete_player_1_dy = 5
 raquete_pc_dy = 5
 
-# velocidade da bola
+# Velocidade inicial da bola
 velocidade_bola_x = 3
 velocidade_bola_y = 3
 
@@ -37,17 +38,13 @@ rodando = True
 font_file = "font/PressStart2P-Regular.ttf"
 font = pygame.font.Font(font_file, 36)
 
-#Definir sons
-mixer.music.load("audios/music_game.mp3")
-
-#denifir sons
+# Definir sons
 mixer.music.load("audios/music_game.mp3")
 mixer.music.play(-1)
 mixer.music.set_volume(0.5)
 som = mixer.Sound("audios/Sound_A.wav")
 
 clock = pygame.time.Clock()
-
 
 def menu_principal():
     global rodando, controle
@@ -67,7 +64,6 @@ def menu_principal():
         screen.blit(texto_menu, text_menu_rect)
 
         tempo = pygame.time.get_ticks()
-        print(tempo)
         # Pressione Space para jogar
         if tempo % 2000 < 1000:
             texto_iniciar = font.render("Pressione Espaço", True, WHITE)
@@ -76,7 +72,6 @@ def menu_principal():
 
         clock.tick(1)
         pygame.display.flip()
-
 
 def posicao_inicial():
     global pc_x, pc_y, player_1_x, player_1_y, bola_x, bola_y, score_pc, score_player_1
@@ -97,7 +92,6 @@ def posicao_inicial():
     score_player_1 = 0
     score_pc = 0
 
-
 def fim_jogo():
     global rodando, vencedor, controle
     while True:
@@ -109,7 +103,6 @@ def fim_jogo():
                 if event.key == pygame.K_SPACE:
                     controle = True
                     posicao_inicial()
-
                     return
         # Renderiza o texto do menu
         screen.fill(BLACK)
@@ -119,9 +112,11 @@ def fim_jogo():
 
         pygame.display.flip()
 
-
 menu_principal()
 posicao_inicial()
+
+# Contador para ajustar a velocidade da bola
+contador_velocidade = 0
 
 while rodando:
     if not controle:
@@ -144,16 +139,21 @@ while rodando:
             player_1_x, player_1_y, wide_racket, racket_height
         )
 
+        # Cores da bola
+        cor_bola = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
         # Colisão da bola com a raquete do pc e a raquete do player
         if bola_rect.colliderect(raquete_pc_rect) or bola_rect.colliderect(
             raquete_player_1_rect
         ):
             som.play()
             velocidade_bola_x = -velocidade_bola_x
+            velocidade_bola_y += random.choice([-1, 1]) * random.uniform(0.5, 1.5)
 
         # Colisão da bola com as bordas da tela
         if bola_y <= 0 or bola_y >= altura - ball_size:
             velocidade_bola_y = -velocidade_bola_y
+            velocidade_bola_x += random.choice([-1, 1]) * random.uniform(0.5, 1.5)
 
         # Posicionar a bola no inicio do jogo
         if bola_x <= 0:
@@ -161,9 +161,7 @@ while rodando:
             bola_y = altura // 2 - ball_size // 2
             velocidade_bola_x = -velocidade_bola_x
             score_player_1 += 1
-            print(f"Score Player_1: {score_player_1}")
             if score_player_1 == 5:
-                print("Player_1 ganhou!")
                 vencedor = "Player 1"
                 fim_jogo()
 
@@ -172,9 +170,7 @@ while rodando:
             bola_y = altura // 2 - ball_size // 2
             velocidade_bola_x = -velocidade_bola_x
             score_pc += 1
-            print(f"Score PC: {score_pc}")
             if score_pc == 5:
-                print("PC ganhou!")
                 vencedor = "PC"
                 fim_jogo()
 
@@ -184,11 +180,18 @@ while rodando:
         elif pc_y + racket_height // 2 > bola_y:
             pc_y -= raquete_pc_dy
 
-        # Evitar que a raquete do pc saia da área
+          # Evitar que a raquete do pc saia da área
         if pc_y < 0:
             pc_y = 0
         elif pc_y > altura - racket_height:
             pc_y = altura - racket_height
+
+        # Ajustar velocidade da bola com o tempo
+        contador_velocidade += 1
+        if contador_velocidade == 300:  # Ajuste o número de frames conforme necessário
+            velocidade_bola_x *= 1.2  # Aumentar a velocidade em 20%
+            velocidade_bola_y *= 1.2
+            contador_velocidade = 0  # Reiniciar o contador
 
         # Mostrando Score no jogo
         fonte_score = pygame.font.Font(font_file, 16)
@@ -205,8 +208,8 @@ while rodando:
             screen, WHITE, (player_1_x, player_1_y, wide_racket, racket_height)
         )
         pygame.draw.ellipse(
-            screen, WHITE, (bola_x, bola_y, ball_size, ball_size)
-        )
+            screen, cor_bola, (bola_x, bola_y, ball_size, ball_size)
+        )  # Aqui trocamos o WHITE por cor_bola
         pygame.draw.aaline(screen, WHITE, (largura // 2, 0), (largura // 2, altura))
 
         # Controle Teclado do Player_1
@@ -220,6 +223,6 @@ while rodando:
 
         clock.tick(60)
 
-# fim_jogo()
 pygame.quit()
 sys.exit()
+
