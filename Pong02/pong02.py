@@ -8,46 +8,46 @@ pygame.init()
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-largura = 800
-altura = 600
+width = 800
+height = 600
 
-screen = pygame.display.set_mode((largura, altura))
+screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Pong")
 
-# Definição da Raquete
-wide_racket = 10  # raquete_largura
-racket_height = 60  # raquete_altura
-ball_size = 14  # tamanho_bola
+# Racket definition
+racket_width = 10
+racket_height = 60
+ball_size = 14
 
-# Velocidade da raquete
-raquete_player_1_dy = 5
-raquete_pc_dy = 5
+# Racket speed
+racket_player_1_speed = 5
+racket_pc_speed = 5
 
-# velocidade da bola
-velocidade_bola_x = 3
-velocidade_bola_y = 3
+# Ball speed
+ball_speed_x = 3
+ball_speed_y = 3
 
-# Definir Vencedor
-vencedor = ""
+# Define winner
+winner = ""
 
-# Definir controle
-controle = False
-rodando = True
+# Define control
+control = False
+running = True
 
-# Configuração da fonte
+# Font settings
 font_file = "font/PressStart2P-Regular.ttf"
 font = pygame.font.Font(font_file, 36)
 
-# Definir sons
-mixer.music.load("audios/music_game.mp3")
+# Define sounds
+mixer.music.load("audios/game.mp3")
 mixer.music.play(-1)
 mixer.music.set_volume(0.5)
-som = mixer.Sound("audios/Sound_A.wav")
+sound = mixer.Sound("audios/Sound_A.wav")
 
 clock = pygame.time.Clock()
 
-def menu_principal():
-    global rodando, controle
+def main_menu():
+    global running, control
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -55,45 +55,45 @@ def menu_principal():
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    controle = True
+                    control = True
                     return
-        # Renderiza o texto do menu
+        # Render menu text
         screen.fill(BLACK)
-        texto_menu = font.render("Pong", True, WHITE)
-        text_menu_rect = texto_menu.get_rect(center=(largura // 2, altura // 2))
-        screen.blit(texto_menu, text_menu_rect)
+        menu_text = font.render("Pong", True, WHITE)
+        menu_text_rect = menu_text.get_rect(center=(width // 2, height // 2))
+        screen.blit(menu_text, menu_text_rect)
 
-        tempo = pygame.time.get_ticks()
-        # Pressione Space para jogar
-        if tempo % 2000 < 1000:
-            texto_iniciar = font.render("Pressione Espaço", True, WHITE)
-            texto_iniciar_rect = texto_iniciar.get_rect(center=(largura // 2, 450))
-            screen.blit(texto_iniciar, texto_iniciar_rect)
+        time = pygame.time.get_ticks()
+        # Press Space to play
+        if time % 2000 < 1000:
+            start_text = font.render("Press Space", True, WHITE)
+            start_text_rect = start_text.get_rect(center=(width // 2, 450))
+            screen.blit(start_text, start_text_rect)
 
         clock.tick(1)
         pygame.display.flip()
 
-def posicao_inicial():
-    global pc_x, pc_y, player_1_x, player_1_y, bola_x, bola_y, score_pc, score_player_1
+def initial_position():
+    global pc_x, pc_y, player_1_x, player_1_y, ball_x, ball_y, pc_score, player_1_score
 
-    # Posição da Raquete do pc
+    # PC racket position
     pc_x = 10
-    pc_y = altura // 2 - racket_height // 2
+    pc_y = height // 2 - racket_height // 2
 
-    # Posição da Raquete do player
-    player_1_x = largura - 20
-    player_1_y = altura // 2 - racket_height // 2
+    # Player racket position
+    player_1_x = width - 20
+    player_1_y = height // 2 - racket_height // 2
 
-    # Posição da bola
-    bola_x = largura // 2 - ball_size // 2
-    bola_y = altura // 2 - ball_size // 2
+    # Ball position
+    ball_x = width // 2 - ball_size // 2
+    ball_y = height // 2 - ball_size // 2
 
-    # Define o Score
-    score_player_1 = 0
-    score_pc = 0
+    # Define the score
+    player_1_score = 0
+    pc_score = 0
 
-def fim_jogo():
-    global rodando, vencedor, controle
+def end_game():
+    global running, winner, control
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -101,113 +101,103 @@ def fim_jogo():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    controle = True
-                    posicao_inicial()
+                    control = True
+                    initial_position()
                     return
-        # Renderiza o texto do menu
+        # Render end text
         screen.fill(BLACK)
-        texto_fim = font.render(f"Vencedor: {vencedor}", True, WHITE)
-        text_fim_rect = texto_fim.get_rect(center=(largura // 2, altura // 2))
-        screen.blit(texto_fim, text_fim_rect)
+        end_text = font.render(f"Winner: {winner}", True, WHITE)
+        end_text_rect = end_text.get_rect(center=(width // 2, height // 2))
+        screen.blit(end_text, end_text_rect)
 
         pygame.display.flip()
 
-menu_principal()
-posicao_inicial()
+main_menu()
+initial_position()
 
-while rodando:
-    if not controle:
-        fim_jogo()
+while running:
+    if not control:
+        end_game()
     else:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                rodando = False
+                running = False
 
         screen.fill(BLACK)
 
-        # Movendo a bola
-        bola_x += velocidade_bola_x
-        bola_y += velocidade_bola_y
+        # Moving the ball
+        ball_x += ball_speed_x
+        ball_y += ball_speed_y
 
-        # Retângulos de Colisão
-        bola_rect = pygame.Rect(bola_x, bola_y, ball_size, ball_size)
-        raquete_pc_rect = pygame.Rect(pc_x, pc_y, wide_racket, racket_height)
-        raquete_player_1_rect = pygame.Rect(
-            player_1_x, player_1_y, wide_racket, racket_height
-        )
+        # Collision rectangles
+        ball_rect = pygame.Rect(ball_x, ball_y, ball_size, ball_size)
+        racket_pc_rect = pygame.Rect(pc_x, pc_y, racket_width, racket_height)
+        racket_player_1_rect = pygame.Rect(player_1_x, player_1_y, racket_width, racket_height)
 
-        # Cores da bola
-        cor_bola = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        # Ball color
+        ball_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-        # Colisão da bola com a raquete do pc e a raquete do player
-        if bola_rect.colliderect(raquete_pc_rect) or bola_rect.colliderect(
-            raquete_player_1_rect
-        ):
-            som.play()
-            velocidade_bola_x = -velocidade_bola_x
-            velocidade_bola_y += random.choice([-1, 1]) * random.uniform(0.5, 1.5)
+        # Ball collision with PC and player racket
+        if ball_rect.colliderect(racket_pc_rect) or ball_rect.colliderect(racket_player_1_rect):
+            sound.play()
+            ball_speed_x = -ball_speed_x
+            ball_speed_y += random.choice([-1, 1]) * random.uniform(0.5, 1.5)
 
-        # Colisão da bola com as bordas da tela
-        if bola_y <= 0 or bola_y >= altura - ball_size:
-            velocidade_bola_y = -velocidade_bola_y
-            velocidade_bola_x += random.choice([-1, 1]) * random.uniform(0.5, 1.5)
+        # Ball collision with screen borders
+        if ball_y <= 0 or ball_y >= height - ball_size:
+            ball_speed_y = -ball_speed_y
+            ball_speed_x += random.choice([-1, 1]) * random.uniform(0.5, 1.5)
 
-        # Posicionar a bola no inicio do jogo
-        if bola_x <= 0:
-            bola_x = largura // 2 - ball_size // 2
-            bola_y = altura // 2 - ball_size // 2
-            velocidade_bola_x = -velocidade_bola_x
-            score_player_1 += 1
-            if score_player_1 == 5:
-                vencedor = "Player 1"
-                fim_jogo()
+        # Reset ball position at the start of the game
+        if ball_x <= 0:
+            ball_x = width // 2 - ball_size // 2
+            ball_y = height // 2 - ball_size // 2
+            ball_speed_x = -ball_speed_x
+            player_1_score += 1
+            if player_1_score == 5:
+                winner = "Player 1"
+                end_game()
 
-        if bola_x >= largura - ball_size:
-            bola_x = largura // 2 - ball_size // 2
-            bola_y = altura // 2 - ball_size // 2
-            velocidade_bola_x = -velocidade_bola_x
-            score_pc += 1
-            if score_pc == 5:
-                vencedor = "PC"
-                fim_jogo()
+        if ball_x >= width - ball_size:
+            ball_x = width // 2 - ball_size // 2
+            ball_y = height // 2 - ball_size // 2
+            ball_speed_x = -ball_speed_x
+            pc_score += 1
+            if pc_score == 5:
+                winner = "PC"
+                end_game()
 
-        # Movendo a raquete do pc pra seguir a bola
-        if pc_y + racket_height // 2 < bola_y:
-            pc_y += raquete_pc_dy
-        elif pc_y + racket_height // 2 > bola_y:
-            pc_y -= raquete_pc_dy
+        # Moving PC racket to follow the ball
+        if pc_y + racket_height // 2 < ball_y:
+            pc_y += racket_pc_speed
+        elif pc_y + racket_height // 2 > ball_y:
+            pc_y -= racket_pc_speed
 
-        # Evitar que a raquete do pc saia da área
+        # Prevent PC racket from leaving the area
         if pc_y < 0:
             pc_y = 0
-        elif pc_y > altura - racket_height:
-            pc_y = altura - racket_height
+        elif pc_y > height - racket_height:
+            pc_y = height - racket_height
 
-        # Mostrando Score no jogo
-        fonte_score = pygame.font.Font(font_file, 16)
-        score_texto = fonte_score.render(
-            f"Score PC: {score_pc}       Score Player_1: {score_player_1}", True, WHITE
-        )
-        score_rect = score_texto.get_rect(center=(largura // 2, 30))
+        # Display score in the game
+        score_font = pygame.font.Font(font_file, 16)
+        score_text = score_font.render(f"Score PC: {pc_score}       Score Player_1: {player_1_score}", True, WHITE)
+        score_rect = score_text.get_rect(center=(width // 2, 30))
 
-        screen.blit(score_texto, score_rect)
+        screen.blit(score_text, score_rect)
 
-        # assets (objetos)
-        pygame.draw.rect(screen, WHITE, (pc_x, pc_y, wide_racket, racket_height))
-        pygame.draw.rect(
-            screen, WHITE, (player_1_x, player_1_y, wide_racket, racket_height)
-        )
-        pygame.draw.ellipse(
-            screen, cor_bola, (bola_x, bola_y, ball_size, ball_size)
-        )  # Aqui trocamos o WHITE por cor_bola
-        pygame.draw.aaline(screen, WHITE, (largura // 2, 0), (largura // 2, altura))
+        # Assets (objects)
+        pygame.draw.rect(screen, WHITE, (pc_x, pc_y, racket_width, racket_height))
+        pygame.draw.rect(screen, WHITE, (player_1_x, player_1_y, racket_width, racket_height))
+        pygame.draw.ellipse(screen, ball_color, (ball_x, ball_y, ball_size, ball_size))  # Ball color
+        pygame.draw.aaline(screen, WHITE, (width // 2, 0), (width // 2, height))
 
-        # Controle Teclado do Player_1
+        # Player 1 keyboard control
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] and player_1_y > 0:
-            player_1_y -= raquete_player_1_dy
-        if keys[pygame.K_DOWN] and player_1_y < altura - racket_height:
-            player_1_y += raquete_player_1_dy
+            player_1_y -= racket_player_1_speed
+        if keys[pygame.K_DOWN] and player_1_y < height - racket_height:
+            player_1_y += racket_player_1_speed
 
         pygame.display.flip()
 
@@ -215,5 +205,3 @@ while rodando:
 
 pygame.quit()
 sys.exit()
-
-       
